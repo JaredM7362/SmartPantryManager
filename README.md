@@ -11,20 +11,20 @@ Institute of Technology.
 
 ## Features
 
-- **Pantry management** — add, view, edit and delete ingredients, each with a name, quantity,
+- **Pantry management** - add, view, edit and delete ingredients, each with a name, quantity,
   unit of measure and an optional expiry date.
-- **Strict recipe matching** — a recipe appears in the suggestions list only if *all* of its
+- **Strict recipe matching** - a recipe appears in the suggestions list only if *all* of its
   required ingredients are present in sufficient quantity. A recipe needing five ingredients when
   the pantry holds four of them is excluded.
-- **Tolerant ingredient matching** — matching is normalised so that trivial real-world
+- **Tolerant ingredient matching** - matching is normalised so that trivial real-world
   differences do not break it: `Tomatoes` matches `tomato`, leading and trailing spaces are
   ignored, and quantities are compared after converting units to a common base (1 kg is
   recognised as enough for a recipe needing 500 g).
-- **Pre-loaded recipe collection** — 18 recipes are seeded into the database on first launch,
+- **Pre-loaded recipe collection** - 18 recipes are seeded into the database on first launch,
   each with its full ingredient list and preparation steps.
-- **Recipe detail view** — full ingredients and method for any suggested recipe.
-- **Helpful empty state** — when nothing matches, the app explains.
-- **Settings** — unit preference and an expiring-soon alert toggle, stored in SharedPreferences.
+- **Recipe detail view** - full ingredients and method for any suggested recipe.
+- **Helpful empty state** - when nothing matches, the app explains.
+- **Settings** - unit preference and an expiring-soon alert toggle, stored in SharedPreferences.
 
 ---
 
@@ -45,7 +45,7 @@ layer does rather than by adopting a configuration that could not be explained.
 
 Three tables:
 
-**`pantry_item`** — the ingredients the user currently has
+**`pantry_item`** - the ingredients the user currently has
 
 | Column | Type | Notes |
 |---|---|---|
@@ -55,7 +55,7 @@ Three tables:
 | `unit` | TEXT | One of: g, kg, ml, l, tsp, tbsp, cup, unit |
 | `expiry_date` | TEXT | Nullable. ISO format (YYYY-MM-DD) so it sorts correctly as text |
 
-**`recipe`** — the seeded recipe collection
+**`recipe`** - the seeded recipe collection
 
 | Column | Type |
 |---|---|
@@ -63,7 +63,7 @@ Three tables:
 | `name` | TEXT NOT NULL |
 | `steps` | TEXT |
 
-**`recipe_ingredient`** — what each recipe requires (one-to-many child of `recipe`)
+**`recipe_ingredient`** - what each recipe requires (one-to-many child of `recipe`)
 
 | Column | Type | Notes |
 |---|---|---|
@@ -95,15 +95,15 @@ A bottom navigation bar moves between Pantry, Recipes and Settings.
 ## How the strict-matching rule works
 
 For each recipe, the matcher walks its required ingredients. The moment one is missing from the
-pantry — or present but in an insufficient quantity — the recipe is disqualified and the check
+pantry - or present but in an insufficient quantity - the recipe is disqualified and the check
 stops. A recipe qualifies only if every ingredient passes, making this a logical AND across the
 whole list rather than a score or a percentage.
 
 Two supporting steps make this robust against real-world input:
 
-1. **Name normalisation** — both sides are lower-cased and trimmed, punctuation is removed, and
+1. **Name normalisation** - both sides are lower-cased and trimmed, punctuation is removed, and
    simple plurals are reduced to their singular form before comparison.
-2. **Unit conversion** — quantities are converted to a base unit within their family (grams for
+2. **Unit conversion** - quantities are converted to a base unit within their family (grams for
    mass, millilitres for volume, whole units for countable items) before being compared.
 
 ---
@@ -117,7 +117,7 @@ Two supporting steps make this robust against real-world input:
 - **Persistence:** SQLite via `SQLiteOpenHelper`, plus SharedPreferences for user settings
 - **UI:** RecyclerView with custom adapters, ConstraintLayout and LinearLayout, BottomNavigationView
 
-No mapping SDK, location services or GPS permissions are used — the app's scope is strictly the
+No mapping SDK, location services or GPS permissions are used - the app's scope is strictly the
 user's own pantry and recipe matching.
 
 ---
@@ -179,4 +179,4 @@ app/src/main/java/com/YOURNAME/smartpantrymanager/
 
 **Jared Jason Moodley**
 Student Number: 402312409
-Mobile App Development 700 — Richfield Graduate Institute of Technology
+Mobile App Development 700 - Richfield Graduate Institute of Technology

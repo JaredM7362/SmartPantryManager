@@ -151,7 +151,6 @@ seeded into the local database automatically on first launch.
 ## Project structure
 
 ```
-app/src/main/java/com/YOURNAME/smartpantrymanager/
 ├── model/
 │   ├── PantryItem.java
 │   ├── Recipe.java

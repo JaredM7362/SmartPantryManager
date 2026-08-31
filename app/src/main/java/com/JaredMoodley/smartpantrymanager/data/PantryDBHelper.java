@@ -7,7 +7,7 @@ import android.util.Log;
 public class PantryDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "smartpantry.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String TABLE_PANTRY = "pantry_item";
     public static final String PANTRY_ID = "_id";
@@ -65,6 +65,7 @@ public class PantryDBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_RECIPE);
         db.execSQL(CREATE_TABLE_RECIPE_INGREDIENT);
         Log.d("PANTRY_DB", "Database tables created");
+        RecipeSeeder.seed(db);
     }
 
     @Override

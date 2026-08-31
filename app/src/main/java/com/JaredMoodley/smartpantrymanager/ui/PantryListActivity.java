@@ -21,6 +21,7 @@ import com.JaredMoodley.smartpantrymanager.model.PantryItem;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import android.content.Intent;
 
 /**
  * Launcher screen. Displays every pantry item in a RecyclerView and provides the entry point to adding a new one.
@@ -61,9 +62,9 @@ public class PantryListActivity extends AppCompatActivity
         recyclerPantry.setAdapter(adapter);
 
         FloatingActionButton fab = findViewById(R.id.fabAddItem);
+
         fab.setOnClickListener(v ->
-                Toast.makeText(this, "Add screen comes in Phase 4",
-                        Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, AddEditIngredientActivity.class)));
     }
 
     /**
@@ -105,9 +106,11 @@ public class PantryListActivity extends AppCompatActivity
         recyclerPantry.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
-    /** Called by the adapter when a row is tapped. Wired up in Phase 4. */
+    /** Called by the adapter when a row is tapped.*/
     @Override
     public void onItemClick(PantryItem item) {
-        Toast.makeText(this, "Tapped: " + item.getName(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, AddEditIngredientActivity.class);
+        intent.putExtra(AddEditIngredientActivity.EXTRA_ITEM_ID, item.getId());
+        startActivity(intent);
     }
 }

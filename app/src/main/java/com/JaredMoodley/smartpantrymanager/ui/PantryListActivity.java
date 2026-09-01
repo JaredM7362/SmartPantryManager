@@ -17,10 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.JaredMoodley.smartpantrymanager.R;
 import com.JaredMoodley.smartpantrymanager.adapter.PantryAdapter;
 import com.JaredMoodley.smartpantrymanager.data.PantryDataSource;
+import com.JaredMoodley.smartpantrymanager.data.RecipeDataSource;
+import com.JaredMoodley.smartpantrymanager.logic.RecipeMatcher;
 import com.JaredMoodley.smartpantrymanager.model.PantryItem;
+import com.JaredMoodley.smartpantrymanager.model.Recipe;
+import com.JaredMoodley.smartpantrymanager.model.RecipeIngredient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.content.Intent;
 
 /**
@@ -62,9 +70,50 @@ public class PantryListActivity extends AppCompatActivity
         recyclerPantry.setAdapter(adapter);
 
         FloatingActionButton fab = findViewById(R.id.fabAddItem);
+        // ---- TEMPORARY: matcher verification. Remove after Phase 7. ----
+        testMatcher();
+        // ---- END TEMPORARY ----
 
         fab.setOnClickListener(v ->
                 startActivity(new Intent(this, AddEditIngredientActivity.class)));
+    }
+
+    /** Temporary: exercises the matcher against the current pantry. */
+    private void testMatcher() {
+        PantryDataSource pantryDs = new PantryDataSource(this);
+        RecipeDataSource recipeDs = new RecipeDataSource(this);
+
+        try {
+            pantryDs.open();
+            ArrayList<PantryItem> pantry = pantryDs.getAllPantryItems();
+            pantryDs.close();
+
+            recipeDs.open();
+            ArrayList<Recipe> recipes = recipeDs.getAllRecipes();
+
+            Map<Integer, List<RecipeIngredient>> ingredientsById = new HashMap<>();
+            for (Recipe r : recipes) {
+                ingredientsById.put(r.getId(),
+                        recipeDs.getIngredientsForRecipe(r.getId()));
+            }
+            recipeDs.close();
+
+            RecipeMatcher matcher = new RecipeMatcher(pantry);
+
+            Log.d("PANTRY_TEST", "Pantry has " + pantry.size() + " items");
+            for (Recipe r : recipes) {
+                List<RecipeIngredient> req = ingredientsById.get(r.getId());
+                int missing = matcher.countMissing(req);
+                Log.d("PANTRY_TEST", (missing == 0 ? "CAN MAKE  " : "missing " + missing + "  ")
+                        + r.getName());
+            }
+
+            Log.d("PANTRY_TEST", "Makeable: "
+                    + matcher.filterMakeable(recipes, ingredientsById).size());
+
+        } catch (Exception e) {
+            Log.e("PANTRY_TEST", "Matcher test failed: " + e.getMessage());
+        }
     }
 
     /**

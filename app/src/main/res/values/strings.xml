@@ -30,4 +30,16 @@
     <string name="msg_deleted">Ingredient deleted</string>
     <string name="msg_save_failed">Could not save ingredient</string>
     <string name="msg_delete_failed">Could not delete ingredient</string>
+
+    <!-- Recipes screen -->
+    <string name="title_suggested">Recipes You Can Make</string>
+    <string name="empty_suggestions">No recipes match your pantry yet - add more ingredients.</string>
+    <string name="ingredient_count">%1$d ingredients</string>
+    <string name="ingredient_count_one">1 ingredient</string>
+
+    <!-- Recipe detail screen -->
+    <string name="label_ingredients">Ingredients</string>
+    <string name="label_method">Method</string>
+    <string name="msg_recipe_not_found">Recipe could not be loaded</string>
+
 </resources>

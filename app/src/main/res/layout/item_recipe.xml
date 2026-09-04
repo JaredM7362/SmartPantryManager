@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    A single row in the suggested recipes list.
+    Inflated by RecipeAdapter.onCreateViewHolder().
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/textRecipeName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"
+        tools:text="Garlic Pasta" />
+
+    <TextView
+        android:id="@+id/textRecipeSummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textSize="14sp"
+        android:textColor="?android:attr/textColorSecondary"
+        tools:text="4 ingredients" />
+
+</LinearLayout>

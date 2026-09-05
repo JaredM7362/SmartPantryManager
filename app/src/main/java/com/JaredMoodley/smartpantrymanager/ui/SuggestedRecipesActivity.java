@@ -24,6 +24,8 @@ import com.JaredMoodley.smartpantrymanager.model.PantryItem;
 import com.JaredMoodley.smartpantrymanager.model.Recipe;
 import com.JaredMoodley.smartpantrymanager.model.RecipeIngredient;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,6 +70,35 @@ public class SuggestedRecipesActivity extends AppCompatActivity
 
         adapter = new RecipeAdapter(new ArrayList<>(), new HashMap<>(), this);
         recyclerRecipes.setAdapter(adapter);
+
+        setUpBottomNavigation();
+    }
+
+    /**
+     * Wires the bottom bar. Pantry finishes this screen rather than starting a
+     * new one, because the pantry list is the launcher Activity and is already
+     * underneath in the back stack - starting it again would stack a duplicate.
+     */
+    private void setUpBottomNavigation() {
+        BottomNavigationView nav = findViewById(R.id.bottomNavRecipes);
+        nav.setSelectedItemId(R.id.nav_recipes);
+
+        nav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_recipes) {
+                return true;   // already here
+            }
+            if (id == R.id.nav_pantry) {
+                finish();
+                return true;
+            }
+            if (id == R.id.nav_settings) {
+                startActivity(new Intent(this, SettingsActivity.class));
+                finish();
+                return true;
+            }
+            return false;
+        });
     }
 
     /**
@@ -136,4 +167,5 @@ public class SuggestedRecipesActivity extends AppCompatActivity
         intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_ID, recipe.getId());
         startActivity(intent);
     }
+
 }

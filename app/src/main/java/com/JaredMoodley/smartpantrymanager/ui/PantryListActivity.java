@@ -16,19 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.JaredMoodley.smartpantrymanager.R;
 import com.JaredMoodley.smartpantrymanager.adapter.PantryAdapter;
+import com.JaredMoodley.smartpantrymanager.data.AppSettings;
 import com.JaredMoodley.smartpantrymanager.data.PantryDataSource;
-import com.JaredMoodley.smartpantrymanager.data.RecipeDataSource;
-import com.JaredMoodley.smartpantrymanager.logic.RecipeMatcher;
 import com.JaredMoodley.smartpantrymanager.model.PantryItem;
-import com.JaredMoodley.smartpantrymanager.model.Recipe;
-import com.JaredMoodley.smartpantrymanager.model.RecipeIngredient;
-import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 import android.content.Intent;
 
@@ -65,24 +60,30 @@ public class PantryListActivity extends AppCompatActivity
         recyclerPantry.addItemDecoration(
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        // Start with an empty list so the adapter is never null; real data is
-        // loaded in onResume().
-        adapter = new PantryAdapter(new ArrayList<>(), this);
-        recyclerPantry.setAdapter(adapter);
 
         FloatingActionButton fab = findViewById(R.id.fabAddItem);
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.menu_pantry_list);
-        toolbar.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getItemId() == R.id.action_recipes) {
+
+
+        fab.setOnClickListener(v ->
+                startActivity(new Intent(this, AddEditIngredientActivity.class)));
+
+        BottomNavigationView nav = findViewById(R.id.bottomNav);
+        nav.setSelectedItemId(R.id.nav_pantry);
+        nav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_pantry) {
+                return true;
+            }
+            if (id == R.id.nav_recipes) {
                 startActivity(new Intent(this, SuggestedRecipesActivity.class));
+                return true;
+            }
+            if (id == R.id.nav_settings) {
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             }
             return false;
         });
-
-        fab.setOnClickListener(v ->
-                startActivity(new Intent(this, AddEditIngredientActivity.class)));
     }
 
 
@@ -116,7 +117,11 @@ public class PantryListActivity extends AppCompatActivity
             Toast.makeText(this, "Could not load your pantry", Toast.LENGTH_SHORT).show();
         }
 
-        adapter.setItems(items);
+        AppSettings settings = new AppSettings(this);
+        adapter = new PantryAdapter(items, this,
+                settings.isExpiryAlertsEnabled(), settings.getExpiryWarningDays());
+        recyclerPantry.setAdapter(adapter);
+
         showEmptyState(items.isEmpty());
     }
 

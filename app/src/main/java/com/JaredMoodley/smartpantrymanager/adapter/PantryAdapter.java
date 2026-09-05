@@ -12,7 +12,8 @@ import com.JaredMoodley.smartpantrymanager.R;
 import com.JaredMoodley.smartpantrymanager.model.PantryItem;
 
 import java.util.ArrayList;
-
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 /**
  * Binds a list of PantryItem objects to rows in a RecyclerView.
  */
@@ -28,10 +29,19 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
     private ArrayList<PantryItem> items;
     private final OnItemClickListener clickListener;
 
-    public PantryAdapter(ArrayList<PantryItem> items, OnItemClickListener clickListener) {
+    private final boolean showExpiryBadges;
+    private final int warningDays;
+
+    public PantryAdapter(ArrayList<PantryItem> items,
+                         OnItemClickListener clickListener,
+                         boolean showExpiryBadges,
+                         int warningDays) {
         this.items = items;
         this.clickListener = clickListener;
+        this.showExpiryBadges = showExpiryBadges;
+        this.warningDays = warningDays;
     }
+
 
     /**
      * Holds the views for one row so they are looked up once, not on every bind.
@@ -41,11 +51,14 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         final TextView textQuantity;
         final TextView textExpiry;
 
+        final TextView textExpiryBadge;
+
         PantryViewHolder(View itemView) {
             super(itemView);
             textName = itemView.findViewById(R.id.textItemName);
             textQuantity = itemView.findViewById(R.id.textItemQuantity);
             textExpiry = itemView.findViewById(R.id.textItemExpiry);
+            textExpiryBadge = itemView.findViewById(R.id.textExpiryBadge);
         }
     }
 
@@ -81,7 +94,43 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
                 clickListener.onItemClick(item);
             }
         });
+
+        bindExpiryBadge(holder, item);
+
+
     }
+
+    /**
+     * Shows an expiry warning when the setting is on and the item is close to,
+     * or past, its date. Visibility is set on both paths because a recycled
+     * row may still be showing a previous item's badge.
+     */
+    private void bindExpiryBadge(PantryViewHolder holder, PantryItem item) {
+        holder.textExpiryBadge.setVisibility(View.GONE);
+
+        if (!showExpiryBadges || item.getExpiryDate() == null
+                || item.getExpiryDate().trim().isEmpty()) {
+            return;
+        }
+
+        try {
+            // Dates are stored as ISO yyyy-MM-dd, which LocalDate parses
+            // directly - one of the reasons that format was chosen.
+            LocalDate expiry = LocalDate.parse(item.getExpiryDate().trim());
+            long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), expiry);
+
+            if (daysLeft < 0) {
+                holder.textExpiryBadge.setText(R.string.expiry_expired);
+                holder.textExpiryBadge.setVisibility(View.VISIBLE);
+            } else if (daysLeft <= warningDays) {
+                holder.textExpiryBadge.setText(R.string.expiry_soon);
+                holder.textExpiryBadge.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            // A malformed date should not break the row - leave the badge off.
+        }
+    }
+
 
     @Override
     public int getItemCount() {
@@ -111,4 +160,6 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
                 ? number
                 : number + " " + unit;
     }
+
+
 }

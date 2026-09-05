@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.JaredMoodley.smartpantrymanager.R;
+import com.JaredMoodley.smartpantrymanager.data.AppSettings;
 import com.JaredMoodley.smartpantrymanager.data.PantryDataSource;
 import com.JaredMoodley.smartpantrymanager.model.PantryItem;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -70,8 +71,15 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         MaterialButton buttonDelete = findViewById(R.id.buttonDelete);
         MaterialButton buttonClearDate = findViewById(R.id.buttonClearDate);
 
+        // The unit list follows the user's preference, so someone working in
+        // imperial is not forced to enter grams.
+        AppSettings settings = new AppSettings(this);
+        int unitsArray = settings.isMetricUnits()
+                ? R.array.units
+                : R.array.units_imperial;
+
         ArrayAdapter<CharSequence> unitAdapter = ArrayAdapter.createFromResource(
-                this, R.array.units, android.R.layout.simple_spinner_item);
+                this, unitsArray, android.R.layout.simple_spinner_item);
         unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerUnit.setAdapter(unitAdapter);
 

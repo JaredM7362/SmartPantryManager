@@ -11,4 +11,14 @@
         <item>cup</item>
         <item>unit</item>
     </string-array>
+
+    <string-array name="units_imperial">
+        <item>oz</item>
+        <item>lb</item>
+        <item>fl oz</item>
+        <item>cup</item>
+        <item>tsp</item>
+        <item>tbsp</item>
+        <item>unit</item>
+    </string-array>
 </resources>

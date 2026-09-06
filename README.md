@@ -113,7 +113,7 @@ Two supporting steps make this robust against real-world input:
 - **Language:** Java
 - **IDE:** Android Studio
 - **Minimum SDK:** API 24 (Android 7.0)
-- **Target SDK:** API 34
+- **Target SDK:** API 37
 - **Persistence:** SQLite via `SQLiteOpenHelper`, plus SharedPreferences for user settings
 - **UI:** RecyclerView with custom adapters, ConstraintLayout and LinearLayout, BottomNavigationView
 
@@ -127,7 +127,7 @@ user's own pantry and recipe matching.
 **Prerequisites**
 
 - Android Studio (Giraffe or newer)
-- An Android device running API 24 or higher, or an emulator (developed against a Pixel 3a, API 33)
+- An Android device running API 24 or higher, or an emulator (developed against a Small phone, API 33)
 
 **Steps**
 
